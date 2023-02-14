@@ -1,0 +1,36 @@
+iam_policies:
+  redshift:
+    s3-logging:
+      action:
+        - s3:GetBucketLocation
+        - s3:GetObject
+        - s3:ListMultipartUploadParts
+        - s3:ListBucket
+        - s3:ListBucketMultipartUploads
+      resource:
+      - Fn::Sub: 'arn:aws:s3:::${RedshiftLoggingS3Bucket}'
+      - Fn::Sub: 'arn:aws:s3:::${RedshiftLoggingS3Bucket}/*'
+    glue:
+      action:
+        - glue:CreateDatabase
+        - glue:DeleteDatabase
+        - glue:GetDatabase
+        - glue:GetDatabases
+        - glue:UpdateDatabase
+        - glue:CreateTable
+        - glue:DeleteTable
+        - glue:BatchDeleteTable
+        - glue:UpdateTable
+        - glue:GetTable
+        - glue:GetTables
+        - glue:BatchCreatePartition
+        - glue:CreatePartition
+        - glue:DeletePartition
+        - glue:BatchDeletePartition
+        - glue:UpdatePartition
+        - glue:GetPartition
+        - glue:GetPartitions
+        - glue:BatchGetPartition
+    logs:
+      action:
+        - logs:*
