@@ -46,6 +46,7 @@ CloudFormation do
             "s3:PutObject",
             "s3:GetBucketAcl"
           ],
+          Effect: "Allow",
           Resource: [
             FnSub("arn:aws:s3:::${RedshiftLoggingS3Bucket}"),
             FnSub("arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"),
@@ -89,6 +90,7 @@ CloudFormation do
   }
 
   Redshift_ClusterSubnetGroup(:RedshiftClusterSubnetGroup) {
+    Description FnSub("${EnvironmentName} - Redshift cluster subnet group")
     SubnetIds Ref(:SubnetIds)
     Tags redshift_tags
   }
@@ -103,7 +105,7 @@ CloudFormation do
   end
 
   Redshift_ClusterParameterGroup(:RedshiftClusterParameterGroup) do
-    Description FnSub("${EnvironmentName} - Redshift Cluster Parameter group")
+    Description FnSub("${EnvironmentName} - Redshift cluster parameter group")
     ParameterGroupFamily 'redshift-1.0'
     Parameters parameters
     Tags redshift_tags
