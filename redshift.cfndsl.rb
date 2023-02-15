@@ -133,7 +133,7 @@ CloudFormation do
       },
       Ref('AWS::NoValue')
     )
-    IamRoles FnGetAtt(:RedshiftIAMRole, :Arn)
+    IamRoles [FnGetAtt(:RedshiftIAMRole, :Arn)]
     SnapshotIdentifier FnIf(:SnapshotSet, Ref(:Snapshot), Ref('AWS::NoValue'))
     Tags redshift_tags
   }
