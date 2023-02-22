@@ -50,7 +50,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property PolicyDocument" do
-          expect(resource["Properties"]["PolicyDocument"]).to eq({"Statement"=>[{"Principal"=>{"Service"=>"redshift.amazonaws.com"}, "Action"=>["s3:PutObject", "s3:GetBucketAcl"], "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}]}]})
+          expect(resource["Properties"]["PolicyDocument"]).to eq({"Statement"=>[{"Principal"=>{"Service"=>"redshift.amazonaws.com"}, "Action"=>["s3:PutObject", "s3:GetBucketAcl"], "Effect"=>"Allow", "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}]}]})
       end
       
     end
@@ -138,6 +138,10 @@ describe 'compiled component redshift' do
           expect(resource["Type"]).to eq("AWS::Redshift::ClusterSubnetGroup")
       end
       
+      it "to have property Description" do
+          expect(resource["Properties"]["Description"]).to eq({"Fn::Sub"=>"${EnvironmentName} - Redshift cluster subnet group"})
+      end
+      
       it "to have property SubnetIds" do
           expect(resource["Properties"]["SubnetIds"]).to eq({"Ref"=>"SubnetIds"})
       end
@@ -156,7 +160,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property Description" do
-          expect(resource["Properties"]["Description"]).to eq({"Fn::Sub"=>"${EnvironmentName} - Redshift Cluster Parameter group"})
+          expect(resource["Properties"]["Description"]).to eq({"Fn::Sub"=>"${EnvironmentName} - Redshift cluster parameter group"})
       end
       
       it "to have property ParameterGroupFamily" do
@@ -233,7 +237,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property IamRoles" do
-          expect(resource["Properties"]["IamRoles"]).to eq({"Fn::GetAtt"=>["RedshiftIAMRole", "Arn"]})
+          expect(resource["Properties"]["IamRoles"]).to eq([{"Fn::GetAtt"=>["RedshiftIAMRole", "Arn"]}])
       end
       
       it "to have property SnapshotIdentifier" do
