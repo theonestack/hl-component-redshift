@@ -3,28 +3,6 @@ name: cftest
 on: [push, pull_request]
 
 jobs:
-  test:
-    name: test
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
-    
-    - name: Set up ruby 2.7
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-
-    - name: install gems
-      run: gem install cfhighlander rspec 
-
-    - name: set cfndsl spec
-      run: cfndsl -u
-      
-    - name: cftest
-      run: rspec
-      env:
-        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-southeast-2
+  rspec:
+    uses: theonestack/shared-workflows/.github/workflows/rspec.yaml@main
+    secrets: inherit
