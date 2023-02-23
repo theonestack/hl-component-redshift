@@ -12,12 +12,13 @@ CfhighlanderTemplate do
     ComponentParam 'VpcId', type: 'AWS::EC2::VPC::Id'
     ComponentParam 'SubnetIds', type: 'CommaDelimitedList'
     ComponentParam 'NumberOfNodes', '1'
-    ComponentParam 'NodeType', 'dc2.large'
+    ComponentParam 'NodeType'
     ComponentParam 'MasterUsername', 'master', allowedPattern: "'([a-z]|[0-9])+'"
     ComponentParam 'EnableLogging', 'true', allowedValues: ['true', 'false']
     ComponentParam 'AutomatedSnapshotRetentionPeriod', '7'
     ComponentParam 'MaintenanceWindow', 'sat:05:00-sat:05:30'
     ComponentParam 'Encrypt', 'true', allowedValues: ['true', 'false']
+    ComponentParam 'KmsKeyId', ''
     ComponentParam 'Snapshot', ''
     ComponentParam 'DatabaseName', ''
   end

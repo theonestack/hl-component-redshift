@@ -196,6 +196,10 @@ describe 'compiled component redshift' do
           expect(resource["Properties"]["Encrypted"]).to eq({"Ref"=>"Encrypt"})
       end
       
+      it "to have property KmsKeyId" do
+          expect(resource["Properties"]["KmsKeyId"]).to eq({"Fn::If"=>["EncryptWithKMS", {"Ref"=>"KmsKeyId"}, {"Ref"=>"AWS::NoValue"}]})
+      end
+      
       it "to have property NodeType" do
           expect(resource["Properties"]["NodeType"]).to eq({"Ref"=>"NodeType"})
       end

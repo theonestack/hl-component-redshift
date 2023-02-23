@@ -10,6 +10,10 @@ CloudFormation do
   Condition(:EnableLoggingCondition, FnEquals(Ref(:EnableLogging), 'true'))
   Condition(:SnapshotSet, FnNot(FnEquals(Ref(:Snapshot), '')))
   Condition(:DatabaseNameSet, FnNot(FnEquals(Ref(:DatabaseName), '')))
+  Condition(:EncryptWithKMS, FnAnd([
+    FnNot(FnEquals(Ref(:KmsKeyId), '')),
+    FnEquals(Ref(:Encrypt), 'true')
+  ]))
 
   S3_Bucket(:RedshiftLoggingS3Bucket) {
     Condition(:EnableLoggingCondition)
@@ -117,6 +121,7 @@ CloudFormation do
     ClusterType FnIf(:RedshiftSingleNodeClusterCondition, 'single-node', 'multi-node')
     NumberOfNodes FnIf(:RedshiftSingleNodeClusterCondition, Ref('AWS::NoValue'), Ref(:NumberOfNodes))
     Encrypted Ref(:Encrypt)
+    KmsKeyId FnIf(:EncryptWithKMS, Ref(:KmsKeyId), Ref('AWS::NoValue'))
     NodeType Ref(:NodeType)
     DBName FnIf(:DatabaseNameSet, Ref(:DatabaseName), Ref('AWS::NoValue'))
     MasterUsername FnSub("{{resolve:secretsmanager:${SecretRedshiftMasterUser}:SecretString:username}}")
@@ -137,4 +142,10 @@ CloudFormation do
     SnapshotIdentifier FnIf(:SnapshotSet, Ref(:Snapshot), Ref('AWS::NoValue'))
     Tags redshift_tags
   }
+
+  Output(:RedshiftClusterEndpoint) {
+    Value FnGetAtt(:RedshiftCluster , 'Endpoint.Address')
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-endpoint")
+  }
+  
 end
