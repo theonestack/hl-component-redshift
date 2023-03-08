@@ -88,7 +88,7 @@ CloudFormation do
   }
 
   Output(:RedshiftSecretId) {
-    Value(:SecretRedshiftMasterUser)
+    Value Ref(:SecretRedshiftMasterUser)
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-secret")
   }
 
