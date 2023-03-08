@@ -87,6 +87,11 @@ CloudFormation do
     })
   }
 
+  Output(:RedshiftSecretId) {
+    Value(:SecretRedshiftMasterUser)
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-secret")
+  }
+
   SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {
     SecretId Ref(:SecretRedshiftMasterUser)
     TargetId Ref(:RedshiftCluster)
@@ -146,6 +151,11 @@ CloudFormation do
   Output(:RedshiftClusterEndpoint) {
     Value FnGetAtt(:RedshiftCluster , 'Endpoint.Address')
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-endpoint")
+  }
+
+  Output(:RedshiftClusterPort) {
+    Value FnGetAtt(:RedshiftCluster , 'Endpoint.Port')
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-port")
   }
   
 end
