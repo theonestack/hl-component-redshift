@@ -129,6 +129,7 @@ CloudFormation do
     KmsKeyId FnIf(:EncryptWithKMS, Ref(:KmsKeyId), Ref('AWS::NoValue'))
     NodeType Ref(:NodeType)
     DBName FnIf(:DatabaseNameSet, Ref(:DatabaseName), Ref('AWS::NoValue'))
+    PubliclyAccessible false
     MasterUsername FnSub("{{resolve:secretsmanager:${SecretRedshiftMasterUser}:SecretString:username}}")
     MasterUserPassword FnSub("{{resolve:secretsmanager:${SecretRedshiftMasterUser}:SecretString:password}}")
     ClusterParameterGroupName Ref(:RedshiftClusterParameterGroup)
