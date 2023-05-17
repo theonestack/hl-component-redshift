@@ -9,6 +9,7 @@ CloudFormation do
   Condition(:RedshiftSingleNodeClusterCondition, FnEquals(Ref(:NumberOfNodes), '1'))
   Condition(:EnableLoggingCondition, FnEquals(Ref(:EnableLogging), 'true'))
   Condition(:SnapshotSet, FnNot(FnEquals(Ref(:Snapshot), '')))
+  Condition(:OwnerAccountSet, FnNot(FnEquals(Ref(:SnapshotOwnerAccount), '')))
   Condition(:DatabaseNameSet, FnNot(FnEquals(Ref(:DatabaseName), '')))
   Condition(:EncryptWithKMS, FnAnd([
     FnNot(FnEquals(Ref(:KmsKeyId), '')),
@@ -146,6 +147,7 @@ CloudFormation do
     )
     IamRoles [FnGetAtt(:RedshiftIAMRole, :Arn)]
     SnapshotIdentifier FnIf(:SnapshotSet, Ref(:Snapshot), Ref('AWS::NoValue'))
+    OwnerAccount FnIf(:OwnerAccountSet, Ref(:SnapshotOwnerAccount), Ref('AWS::NoValue'))
     Tags redshift_tags
   }
 

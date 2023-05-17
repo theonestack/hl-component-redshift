@@ -27,6 +27,7 @@ kurgan add redshift
 | Encrypt | If true, the data in the cluster is encrypted at rest | | false | String | ['true', 'false']
 | KmsKeyId | The AWS Key Management Service (KMS) key ID of the encryption key that you want to use to encrypt data in the cluster. | | | |
 | Snapshot | The name of the snapshot from which to create the new cluster | | false | String |
+| SnapshotOwnerAccount |The AWS account used to create or copy the snapshot | | false | String |
 | DatabaseName | The name of the first database to be created when the cluster is created. | | false | String |
 
 ## Configuration

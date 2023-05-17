@@ -247,6 +247,10 @@ describe 'compiled component redshift' do
       it "to have property SnapshotIdentifier" do
           expect(resource["Properties"]["SnapshotIdentifier"]).to eq({"Fn::If"=>["SnapshotSet", {"Ref"=>"Snapshot"}, {"Ref"=>"AWS::NoValue"}]})
       end
+
+      it "to have property OwnerAccount" do
+        expect(resource["Properties"]["OwnerAccount"]).to eq({"Fn::If"=>["OwnerAccountSet", {"Ref"=>"SnapshotOwnerAccount"}, {"Ref"=>"AWS::NoValue"}]})
+      end
       
       it "to have property Tags" do
           expect(resource["Properties"]["Tags"]).to eq([{"Key"=>"Environment", "Value"=>{"Ref"=>"EnvironmentName"}}, {"Key"=>"Locale", "Value"=>"AU"}])
