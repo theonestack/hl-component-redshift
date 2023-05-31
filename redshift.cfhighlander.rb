@@ -20,6 +20,7 @@ CfhighlanderTemplate do
     ComponentParam 'Encrypt', 'true', allowedValues: ['true', 'false']
     ComponentParam 'KmsKeyId', ''
     ComponentParam 'Snapshot', ''
+    ComponentParam 'SnapshotAccountOwner', ''
     ComponentParam 'DatabaseName', ''
   end
 
