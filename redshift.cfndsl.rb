@@ -150,7 +150,7 @@ CloudFormation do
     OwnerAccount FnIf(:SnapshotAccountOwnerSet, Ref(:SnapshotAccountOwner), Ref('AWS::NoValue'))
     Tags redshift_tags
   }
-
+  
   Output(:RedshiftClusterEndpoint) {
     Value FnGetAtt(:RedshiftCluster , 'Endpoint.Address')
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-endpoint")
@@ -159,6 +159,11 @@ CloudFormation do
   Output(:RedshiftClusterPort) {
     Value FnGetAtt(:RedshiftCluster , 'Endpoint.Port')
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-port")
+  }
+
+  Output(:RedshiftSecurityGroup) {
+    Value FnGetAtt(:RedshiftSecurityGroup , 'GroupId')
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-security-group")
   }
   
 end
