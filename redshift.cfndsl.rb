@@ -63,9 +63,26 @@ CloudFormation do
 
   iam_policies = external_parameters[:iam_policies]
 
+  iam_role_arns = []
+
   IAM_Role(:RedshiftIAMRole) {
     AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
     Policies iam_role_policies(iam_policies['redshift'])
+  }
+
+  iam_role_arns << FnGetAtt(:RedshiftIAMRole, "Arn")
+
+  external_parameters.fetch(:additional_iam_roles, []).each_with_index do |iam_role,_|
+    IAM_Role(iam_role) {
+      AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
+      Policies iam_role_policies(iam_policies[iam_role])
+    }
+
+    iam_role_arns << FnGetAtt(iam_role, "Arn")
+  end
+
+  Output("IamRoleArns") {
+    Value FnJoin(',', iam_role_arns)
   }
 
   security_group_rules = external_parameters.fetch(:security_group_rules, [])
@@ -145,7 +162,7 @@ CloudFormation do
       },
       Ref('AWS::NoValue')
     )
-    IamRoles [FnGetAtt(:RedshiftIAMRole, :Arn)]
+    IamRoles iam_role_arns
     SnapshotIdentifier FnIf(:SnapshotSet, Ref(:Snapshot), Ref('AWS::NoValue'))
     OwnerAccount FnIf(:SnapshotAccountOwnerSet, Ref(:SnapshotAccountOwner), Ref('AWS::NoValue'))
     Tags redshift_tags

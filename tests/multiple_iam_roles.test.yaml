@@ -1,0 +1,23 @@
+test_metadata:
+  type: config
+  name: multiple_iam_roles
+  description: set the description for your test
+
+# Insert your tests here
+iam_policies:
+  redshift:
+    logs:
+      action:
+        - logs:*
+  a:
+    logs:
+      action:
+        - logs:*
+  b:
+    logs:
+      action:
+        - logs:*
+
+additional_iam_roles:
+- a
+- b
