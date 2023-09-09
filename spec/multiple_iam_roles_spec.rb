@@ -72,8 +72,8 @@ describe 'compiled component redshift' do
       
     end
     
-    context "a" do
-      let(:resource) { template["Resources"]["a"] }
+    context "RedshiftCopyUnload" do
+      let(:resource) { template["Resources"]["RedshiftCopyUnload"] }
 
       it "is of type AWS::IAM::Role" do
           expect(resource["Type"]).to eq("AWS::IAM::Role")
@@ -85,12 +85,16 @@ describe 'compiled component redshift' do
       
       it "to have property Policies" do
           expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+      end
+      
+      it "to have property RoleName" do
+          expect(resource["Properties"]["RoleName"]).to eq("dl-uat-RedshiftCopyUnload")
       end
       
     end
     
-    context "b" do
-      let(:resource) { template["Resources"]["b"] }
+    context "MyOtherRole" do
+      let(:resource) { template["Resources"]["MyOtherRole"] }
 
       it "is of type AWS::IAM::Role" do
           expect(resource["Type"]).to eq("AWS::IAM::Role")
@@ -102,6 +106,10 @@ describe 'compiled component redshift' do
       
       it "to have property Policies" do
           expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+      end
+      
+      it "to have property RoleName" do
+          expect(resource["Properties"]["RoleName"]).to eq("myotherrole")
       end
       
     end
@@ -279,7 +287,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property IamRoles" do
-          expect(resource["Properties"]["IamRoles"]).to eq([{"Fn::GetAtt"=>["RedshiftIAMRole", "Arn"]}, {"Fn::GetAtt"=>["a", "Arn"]}, {"Fn::GetAtt"=>["b", "Arn"]}])
+          expect(resource["Properties"]["IamRoles"]).to eq([{"Fn::GetAtt"=>["RedshiftIAMRole", "Arn"]}, {"Fn::GetAtt"=>["RedshiftCopyUnload", "Arn"]}, {"Fn::GetAtt"=>["MyOtherRole", "Arn"]}])
       end
       
       it "to have property SnapshotIdentifier" do

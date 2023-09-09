@@ -9,15 +9,17 @@ iam_policies:
     logs:
       action:
         - logs:*
-  a:
+  RedshiftCopyUnload:
     logs:
       action:
         - logs:*
-  b:
+  MyOtherRole:
     logs:
       action:
         - logs:*
 
 additional_iam_roles:
-- a
-- b
+  RedshiftCopyUnload:
+    name: dl-uat-RedshiftCopyUnload
+  MyOtherRole:
+    name: myotherrole

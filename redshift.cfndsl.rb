@@ -72,13 +72,14 @@ CloudFormation do
 
   iam_role_arns << FnGetAtt(:RedshiftIAMRole, "Arn")
 
-  external_parameters.fetch(:additional_iam_roles, []).each do |iam_role|
-    IAM_Role(iam_role) {
+  external_parameters.fetch(:additional_iam_roles, {}).each do |k,v|
+    IAM_Role(k) {
       AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
-      Policies iam_role_policies(iam_policies[iam_role])
+      Policies iam_role_policies(iam_policies[k])
+      RoleName v["name"]
     }
 
-    iam_role_arns << FnGetAtt(iam_role, "Arn")
+    iam_role_arns << FnGetAtt(k, "Arn")
   end
 
   Output("IamRoleArns") {
