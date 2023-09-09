@@ -43,6 +43,7 @@ tags:
 | Name | Value | Exported |
 | ---- | ----- | -------- |
 | RedshiftClusterEndpoint | Endpoint.Address | true
+| IamRoleArns | iam_role_arns | false
 
 ## Development
 
