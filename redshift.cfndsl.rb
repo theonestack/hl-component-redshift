@@ -76,7 +76,9 @@ CloudFormation do
     IAM_Role(k) {
       AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
       Policies iam_role_policies(iam_policies[k])
-      RoleName v["name"]
+      if v && v.has_key?("name")
+        RoleName v["name"]
+      end
     }
 
     iam_role_arns << FnGetAtt(k, "Arn")

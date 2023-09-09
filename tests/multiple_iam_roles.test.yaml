@@ -22,4 +22,4 @@ additional_iam_roles:
   RedshiftCopyUnload:
     name: dl-uat-RedshiftCopyUnload
   MyOtherRole:
-    name: myotherrole
+  

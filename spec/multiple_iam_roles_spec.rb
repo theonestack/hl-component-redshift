@@ -108,10 +108,6 @@ describe 'compiled component redshift' do
           expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
       end
       
-      it "to have property RoleName" do
-          expect(resource["Properties"]["RoleName"]).to eq("myotherrole")
-      end
-      
     end
     
     context "RedshiftSecurityGroup" do
