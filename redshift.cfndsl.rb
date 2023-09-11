@@ -86,6 +86,7 @@ CloudFormation do
 
   Output("IamRoleArns") {
     Value FnJoin(',', iam_role_arns)
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-iam-role-arns")
   }
 
   security_group_rules = external_parameters.fetch(:security_group_rules, [])
