@@ -20,6 +20,6 @@ iam_policies:
 
 additional_iam_roles:
   RedshiftCopyUnload:
-    name: dl-uat-RedshiftCopyUnload
+    name: 'dl-${EnvironmentName}-RedshiftCopyUnload'
   MyOtherRole:
   

@@ -77,7 +77,7 @@ CloudFormation do
       AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
       Policies iam_role_policies(iam_policies[k])
       if v && v.has_key?("name")
-        RoleName v["name"]
+        RoleName FnSub(v["name"])
       end
     }
 

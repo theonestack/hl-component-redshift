@@ -88,7 +88,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property RoleName" do
-          expect(resource["Properties"]["RoleName"]).to eq("dl-uat-RedshiftCopyUnload")
+          expect(resource["Properties"]["RoleName"]).to eq({"Fn::Sub"=>"dl-${EnvironmentName}-RedshiftCopyUnload"})
       end
       
     end
