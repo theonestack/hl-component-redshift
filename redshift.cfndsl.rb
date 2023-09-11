@@ -81,6 +81,11 @@ CloudFormation do
       end
     }
 
+    Output("#{k}IamRoleArn") {
+      Value FnGetAtt(k, "Arn")
+      Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-#{k}-iam-role-arn")
+    }
+
     iam_role_arns << FnGetAtt(k, "Arn")
   end
 
