@@ -1,0 +1,25 @@
+test_metadata:
+  type: config
+  name: multiple_iam_roles
+  description: set the description for your test
+
+# Insert your tests here
+iam_policies:
+  redshift:
+    logs:
+      action:
+        - logs:*
+  RedshiftCopyUnload:
+    logs:
+      action:
+        - logs:*
+  MyOtherRole:
+    logs:
+      action:
+        - logs:*
+
+additional_iam_roles:
+  RedshiftCopyUnload:
+    name: 'dl-${EnvironmentName}-RedshiftCopyUnload'
+  MyOtherRole:
+  
