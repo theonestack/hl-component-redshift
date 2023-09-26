@@ -118,9 +118,15 @@ CloudFormation do
     Value Ref(:SecretRedshiftMasterUser)
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-secret")
   }
+  
+  Resource("SecretNameCustomResource") do
+    Type 'Custom::RedshiftSecretName'
+    Property 'ServiceToken',FnGetAtt('RedshiftSecretNameCR','Arn')
+    Property 'SecretArn', Ref(:SecretRedshiftMasterUser)
+  end
 
   Output(:RedshiftSecretName) {
-    Value(FnJoin("-", [FnSplit('-', FnSelect(1, FnSplit(':', Ref(:SecretRedshiftMasterUser)))), FnSelect(2, FnSplit('-', FnSelect(5, FnSplit(':', Ref(:SecretRedshiftMasterUser)))))]))
+    Value(Ref('SecretNameCustomResource'))
   }
 
   SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {

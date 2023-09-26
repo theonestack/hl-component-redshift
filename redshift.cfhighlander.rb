@@ -23,5 +23,7 @@ CfhighlanderTemplate do
     ComponentParam 'SnapshotAccountOwner', ''
     ComponentParam 'DatabaseName', ''
   end
+  
+  LambdaFunctions 'redshift_custom_resources'
 
 end

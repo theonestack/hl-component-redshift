@@ -34,3 +34,27 @@ iam_policies:
     logs:
       action:
         - logs:*
+
+redshift_custom_resources:
+  custom_policies:
+    secretsmanager:
+      action:
+        - secretsmanager:*
+      resource: '*'
+    lambda:
+      action:
+        - lambda:InvokeFunction
+      resource: '*'
+  roles:
+    RedshiftSecretNameResource:
+      policies_inline:
+        - cloudwatch-logs
+        - secretsmanager
+        - lambda
+  functions:
+    RedshiftSecretNameCR:
+      code: redshift_secret_name_cr.py
+      handler: redshift_secret_name_cr.handler
+      runtime: python3.8
+      timeout: 600
+      role: RedshiftSecretNameResource
