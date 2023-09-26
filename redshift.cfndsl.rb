@@ -106,6 +106,7 @@ CloudFormation do
 
   SecretsManager_Secret(:SecretRedshiftMasterUser) {
     Description FnSub("${EnvironmentName} Secrets Manager to store Redshift user credentials")
+    Name 'SecretRedshiftMasterUser'
     GenerateSecretString({
       SecretStringTemplate: FnSub('{"username": "${MasterUsername}"}'),
       GenerateStringKey: "password",
