@@ -120,7 +120,7 @@ CloudFormation do
   }
 
   Output(:RedshiftSecretName) {
-    Value(FnSelect(5, FnSplit(':', FnSelect(5, FnSplit('-', Ref(:SecretRedshiftMasterUser))))))
+    Value(FnSelect(6, FnSplit('-', FnSelect(5, FnSplit(':', Ref(:SecretRedshiftMasterUser))))))
   }
 
   SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {
