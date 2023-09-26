@@ -119,6 +119,10 @@ CloudFormation do
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-secret")
   }
 
+  Output(:RedshiftSecretName) {
+    Value(FnSelect(5, FnSplit(':', FnSelect(5, FnSplit('-', Ref(:SecretRedshiftMasterUser))))))
+  }
+
   SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {
     SecretId Ref(:SecretRedshiftMasterUser)
     TargetId Ref(:RedshiftCluster)
