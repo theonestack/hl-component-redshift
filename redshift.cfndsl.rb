@@ -63,9 +63,35 @@ CloudFormation do
 
   iam_policies = external_parameters[:iam_policies]
 
+  iam_role_arns = []
+
   IAM_Role(:RedshiftIAMRole) {
     AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
     Policies iam_role_policies(iam_policies['redshift'])
+  }
+
+  iam_role_arns << FnGetAtt(:RedshiftIAMRole, "Arn")
+
+  external_parameters.fetch(:additional_iam_roles, {}).each do |k,v|
+    IAM_Role(k) {
+      AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
+      Policies iam_role_policies(iam_policies[k])
+      if v && v.has_key?("name")
+        RoleName FnSub(v["name"])
+      end
+    }
+
+    Output("#{k}IamRoleArn") {
+      Value FnGetAtt(k, "Arn")
+      Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-#{k}-iam-role-arn")
+    }
+
+    iam_role_arns << FnGetAtt(k, "Arn")
+  end
+
+  Output("IamRoleArns") {
+    Value FnJoin(',', iam_role_arns)
+    Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-iam-role-arns")
   }
 
   security_group_rules = external_parameters.fetch(:security_group_rules, [])
@@ -80,6 +106,7 @@ CloudFormation do
 
   SecretsManager_Secret(:SecretRedshiftMasterUser) {
     Description FnSub("${EnvironmentName} Secrets Manager to store Redshift user credentials")
+    Name 'SecretRedshiftMasterUser'
     GenerateSecretString({
       SecretStringTemplate: FnSub('{"username": "${MasterUsername}"}'),
       GenerateStringKey: "password",
@@ -145,7 +172,7 @@ CloudFormation do
       },
       Ref('AWS::NoValue')
     )
-    IamRoles [FnGetAtt(:RedshiftIAMRole, :Arn)]
+    IamRoles iam_role_arns
     SnapshotIdentifier FnIf(:SnapshotSet, Ref(:Snapshot), Ref('AWS::NoValue'))
     OwnerAccount FnIf(:SnapshotAccountOwnerSet, Ref(:SnapshotAccountOwner), Ref('AWS::NoValue'))
     Tags redshift_tags
