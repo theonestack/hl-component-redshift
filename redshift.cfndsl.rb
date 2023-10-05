@@ -97,6 +97,7 @@ CloudFormation do
       ]
     }
     IAM_Role(:RedshiftFederationIAMRole) {
+      RoleName "redshift-federation-role"
       AssumeRolePolicyDocument assumeRolePolicy
       Policies iam_role_policies(iam_policies['redshift-federation'])
     }
