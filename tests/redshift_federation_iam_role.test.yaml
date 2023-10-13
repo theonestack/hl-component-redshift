@@ -1,0 +1,39 @@
+test_metadata:
+  type: config
+  name: redshift_federation_iam_role
+  description: set the description for your test
+
+# Insert your tests here
+iam_policies:
+  redshift-federation:
+    redshift:
+      action:
+      - redshift:CreateClusterUser
+      - redshift:JoinGroup
+      - redshift:GetClusterCredentials
+      - redshift:ListSchemas
+      - redshift:ListTables
+      - redshift:ListDatabases
+      - redshift:ExecuteQuery
+      - redshift:FetchResults
+      - redshift:CancelQuery
+      - redshift:DescribeClusters
+      - redshift:DescribeQuery
+      - redshift:DescribeTable
+      resource:
+      - Fn::Sub: 'arn:aws:redshift:${AWS::Region}:${AWS::AccountId}:cluster:${RedshiftCluster}'
+      - Fn::Sub: 'arn:aws:redshift:${AWS::Region}:${AWS::AccountId}:dbuser:${RedshiftCluster}/${!redshift:DbUser}'
+      - Fn::Sub: 'arn:aws:redshift:${AWS::Region}:${AWS::AccountId}:dbname:${RedshiftCluster}/${!redshift:DbName}'
+      - Fn::Sub: 'arn:aws:redshift:${AWS::Region}:${AWS::AccountId}:dbgroup:${RedshiftCluster}/mygroup'
+  redshift:
+    logs:
+      action:
+        - logs:*
+
+redshift_federation_iam_role:
+  enable: true
+  assume_role_policy:
+    principal:
+      providerName: redshift-federation-saml-provider
+    condition:
+      samlAud: "http://localhost:7890/redshift/"

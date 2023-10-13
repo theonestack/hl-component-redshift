@@ -72,6 +72,42 @@ CloudFormation do
 
   iam_role_arns << FnGetAtt(:RedshiftIAMRole, "Arn")
 
+  redshift_federation_iam_role = external_parameters.fetch(:redshift_federation_iam_role, {})
+  if !redshift_federation_iam_role.empty? && redshift_federation_iam_role["enable"]
+    samlProviderName = redshift_federation_iam_role["assume_role_policy"]["principal"]["providerName"]
+    samlAud = redshift_federation_iam_role["assume_role_policy"]["condition"]["samlAud"]
+    assumeRolePolicy = {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Effect": "Allow",
+              "Principal": {
+                  "Federated": FnSub("arn:aws:iam::${AWS::AccountId}:saml-provider/#{samlProviderName}")
+              },
+              "Action": [
+                  "sts:AssumeRoleWithSAML",
+                  "sts:TagSession"
+              ],
+              "Condition": {
+                  "StringEquals": {
+                      "SAML:aud": "#{samlAud}"
+                  }
+              }
+          }
+      ]
+    }
+    IAM_Role(:RedshiftFederationIAMRole) {
+      RoleName "redshift-federation-role"
+      AssumeRolePolicyDocument assumeRolePolicy
+      Policies iam_role_policies(iam_policies['redshift-federation'])
+    }
+
+    Output("RedshiftFederationIamRoleArn") {
+      Value FnGetAtt(:RedshiftFederationIAMRole, "Arn")
+      Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-federation-iam-role-arn")
+    }
+  end
+
   external_parameters.fetch(:additional_iam_roles, {}).each do |k,v|
     IAM_Role(k) {
       AssumeRolePolicyDocument service_assume_role_policy(['redshift','glue'])
