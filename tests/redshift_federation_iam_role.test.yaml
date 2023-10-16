@@ -35,7 +35,7 @@ redshift_federation_iam_role:
   assume_role_policy:
     principal:
       providers:
-      - Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_telco_operational_group_redshift-federation-saml-provider'
-      - Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_utilities_operational_group_redshift-federation-saml-provider'
+      - Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_example_redshift-federation-saml-provider'
+      - Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_hello_redshift-federation-saml-provider'
     condition:
       samlAud: "http://localhost:7890/redshift/"

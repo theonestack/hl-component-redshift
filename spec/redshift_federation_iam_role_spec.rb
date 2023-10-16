@@ -84,7 +84,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property AssumeRolePolicyDocument" do
-          expect(resource["Properties"]["AssumeRolePolicyDocument"]).to eq({"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Allow", "Principal"=>{"Federated"=>[{"Fn::Sub"=>"arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_telco_operational_group_redshift-federation-saml-provider"}, {"Fn::Sub"=>"arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_utilities_operational_group_redshift-federation-saml-provider"}]}, "Action"=>["sts:AssumeRoleWithSAML", "sts:TagSession"], "Condition"=>{"StringEquals"=>{"SAML:aud"=>"http://localhost:7890/redshift/"}}}]})
+          expect(resource["Properties"]["AssumeRolePolicyDocument"]).to eq({"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Allow", "Principal"=>{"Federated"=>[{"Fn::Sub"=>"arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_example_redshift-federation-saml-provider"}, {"Fn::Sub"=>"arn:aws:iam::${AWS::AccountId}:saml-provider/${EnvironmentName}_hello_redshift-federation-saml-provider"}]}, "Action"=>["sts:AssumeRoleWithSAML", "sts:TagSession"], "Condition"=>{"StringEquals"=>{"SAML:aud"=>"http://localhost:7890/redshift/"}}}]})
       end
       
       it "to have property Policies" do
