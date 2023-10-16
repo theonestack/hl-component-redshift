@@ -74,7 +74,7 @@ CloudFormation do
 
   redshift_federation_iam_role = external_parameters.fetch(:redshift_federation_iam_role, {})
   if !redshift_federation_iam_role.empty? && redshift_federation_iam_role["enable"]
-    samlProviderName = redshift_federation_iam_role["assume_role_policy"]["principal"]["providerName"]
+    samlProviders = redshift_federation_iam_role["assume_role_policy"]["principal"]["providers"]
     samlAud = redshift_federation_iam_role["assume_role_policy"]["condition"]["samlAud"]
     assumeRolePolicy = {
       "Version": "2012-10-17",
@@ -82,7 +82,7 @@ CloudFormation do
           {
               "Effect": "Allow",
               "Principal": {
-                  "Federated": FnSub("arn:aws:iam::${AWS::AccountId}:saml-provider/#{samlProviderName}")
+                  "Federated": samlProviders
               },
               "Action": [
                   "sts:AssumeRoleWithSAML",
