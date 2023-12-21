@@ -156,12 +156,6 @@ CloudFormation do
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-secret")
   }
 
-  SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {
-    SecretId Ref(:SecretRedshiftMasterUser)
-    TargetId Ref(:RedshiftCluster)
-    TargetType 'AWS::Redshift::Cluster'
-  }
-
   Redshift_ClusterSubnetGroup(:RedshiftClusterSubnetGroup) {
     Description FnSub("${EnvironmentName} - Redshift cluster subnet group")
     SubnetIds Ref(:SubnetIds)
@@ -180,11 +174,13 @@ CloudFormation do
   Redshift_ClusterParameterGroup(:RedshiftClusterParameterGroup) do
     Description FnSub("${EnvironmentName} - Redshift cluster parameter group")
     ParameterGroupFamily 'redshift-1.0'
+    ParameterGroupName Ref('ParameterGroupName')
     Parameters parameters
     Tags redshift_tags
   end
 
   Redshift_Cluster(:RedshiftCluster) {
+    DependsOn [:RedshiftClusterParameterGroup]
     DeletionPolicy 'Snapshot'
     UpdateReplacePolicy 'Snapshot'
     ClusterType FnIf(:RedshiftSingleNodeClusterCondition, 'single-node', 'multi-node')
@@ -227,6 +223,13 @@ CloudFormation do
   Output(:RedshiftSecurityGroup) {
     Value FnGetAtt(:RedshiftSecurityGroup , 'GroupId')
     Export FnSub("${EnvironmentName}-#{external_parameters[:component_name]}-redshift-security-group")
+  }
+
+  SecretsManager_SecretTargetAttachment(:SecretTargetAttachment) {
+    DependsOn [:RedshiftCluster]
+    SecretId Ref(:SecretRedshiftMasterUser)
+    TargetId Ref(:RedshiftCluster)
+    TargetType 'AWS::Redshift::Cluster'
   }
   
 end
