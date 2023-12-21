@@ -22,6 +22,7 @@ CfhighlanderTemplate do
     ComponentParam 'Snapshot', ''
     ComponentParam 'SnapshotAccountOwner', ''
     ComponentParam 'DatabaseName', ''
+    ComponentParam 'ParameterGroupName', ''
   end
 
 end
