@@ -140,9 +140,10 @@ CloudFormation do
     Tags redshift_tags
   }
 
+  redshift_master_user_secret_name = external_parameters.fetch(:redshift_master_user_secret_name, "SecretRedshiftMasterUser")
   SecretsManager_Secret(:SecretRedshiftMasterUser) {
     Description FnSub("${EnvironmentName} Secrets Manager to store Redshift user credentials")
-    Name 'SecretRedshiftMasterUser'
+    Name redshift_master_user_secret_name
     GenerateSecretString({
       SecretStringTemplate: FnSub('{"username": "${MasterUsername}"}'),
       GenerateStringKey: "password",
