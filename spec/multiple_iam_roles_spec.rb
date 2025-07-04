@@ -67,7 +67,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property Policies" do
-          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"s3-logging", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"s3logging", "Action"=>["s3:GetBucketLocation", "s3:GetObject", "s3:ListMultipartUploadParts", "s3:ListBucket", "s3:ListBucketMultipartUploads"], "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}], "Effect"=>"Allow"}]}}, {"PolicyName"=>"glue", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"glue", "Action"=>["glue:CreateDatabase", "glue:DeleteDatabase", "glue:GetDatabase", "glue:GetDatabases", "glue:UpdateDatabase", "glue:CreateTable", "glue:DeleteTable", "glue:BatchDeleteTable", "glue:UpdateTable", "glue:GetTable", "glue:GetTables", "glue:BatchCreatePartition", "glue:CreatePartition", "glue:DeletePartition", "glue:BatchDeletePartition", "glue:UpdatePartition", "glue:GetPartition", "glue:GetPartitions", "glue:BatchGetPartition"], "Resource"=>["*"], "Effect"=>"Allow"}]}}, {"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"s3-logging", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"s3logging", "Action"=>["s3:GetBucketLocation", "s3:GetObject", "s3:ListMultipartUploadParts", "s3:ListBucket", "s3:ListBucketMultipartUploads"], "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}], "Effect"=>"Allow"}]}}, {"PolicyName"=>"glue", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"glue", "Action"=>["glue:CreateDatabase", "glue:DeleteDatabase", "glue:GetDatabase", "glue:GetDatabases", "glue:UpdateDatabase", "glue:CreateTable", "glue:DeleteTable", "glue:BatchDeleteTable", "glue:UpdateTable", "glue:GetTable", "glue:GetTables", "glue:BatchCreatePartition", "glue:CreatePartition", "glue:DeletePartition", "glue:BatchDeletePartition", "glue:UpdatePartition", "glue:GetPartition", "glue:GetPartitions", "glue:BatchGetPartition"], "Resource"=>["*"], "Effect"=>"Allow"}]}}, {"PolicyName"=>"logs", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
       end
       
     end
@@ -84,7 +84,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property Policies" do
-          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
       end
       
       it "to have property RoleName" do
@@ -105,7 +105,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property Policies" do
-          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"logs", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
       end
       
     end
@@ -140,6 +140,10 @@ describe 'compiled component redshift' do
       
       it "to have property Description" do
           expect(resource["Properties"]["Description"]).to eq({"Fn::Sub"=>"${EnvironmentName} Secrets Manager to store Redshift user credentials"})
+      end
+      
+      it "to have property Name" do
+          expect(resource["Properties"]["Name"]).to eq("SecretRedshiftMasterUser")
       end
       
       it "to have property GenerateSecretString" do
