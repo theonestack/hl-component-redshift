@@ -67,7 +67,7 @@ describe 'compiled component redshift' do
       end
       
       it "to have property Policies" do
-          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"s3-logging", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"s3logging", "Action"=>["s3:GetBucketLocation", "s3:GetObject", "s3:ListMultipartUploadParts", "s3:ListBucket", "s3:ListBucketMultipartUploads"], "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}], "Effect"=>"Allow"}]}}, {"PolicyName"=>"glue", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"glue", "Action"=>["glue:CreateDatabase", "glue:DeleteDatabase", "glue:GetDatabase", "glue:GetDatabases", "glue:UpdateDatabase", "glue:CreateTable", "glue:DeleteTable", "glue:BatchDeleteTable", "glue:UpdateTable", "glue:GetTable", "glue:GetTables", "glue:BatchCreatePartition", "glue:CreatePartition", "glue:DeletePartition", "glue:BatchDeletePartition", "glue:UpdatePartition", "glue:GetPartition", "glue:GetPartitions", "glue:BatchGetPartition"], "Resource"=>["*"], "Effect"=>"Allow"}]}}, {"PolicyName"=>"logs", "PolicyDocument"=>{"Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
+          expect(resource["Properties"]["Policies"]).to eq([{"PolicyName"=>"s3-logging", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"s3logging", "Action"=>["s3:GetBucketLocation", "s3:GetObject", "s3:ListMultipartUploadParts", "s3:ListBucket", "s3:ListBucketMultipartUploads"], "Resource"=>[{"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}"}, {"Fn::Sub"=>"arn:aws:s3:::${RedshiftLoggingS3Bucket}/*"}], "Effect"=>"Allow"}]}}, {"PolicyName"=>"glue", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"glue", "Action"=>["glue:CreateDatabase", "glue:DeleteDatabase", "glue:GetDatabase", "glue:GetDatabases", "glue:UpdateDatabase", "glue:CreateTable", "glue:DeleteTable", "glue:BatchDeleteTable", "glue:UpdateTable", "glue:GetTable", "glue:GetTables", "glue:BatchCreatePartition", "glue:CreatePartition", "glue:DeletePartition", "glue:BatchDeletePartition", "glue:UpdatePartition", "glue:GetPartition", "glue:GetPartitions", "glue:BatchGetPartition"], "Resource"=>["*"], "Effect"=>"Allow"}]}}, {"PolicyName"=>"logs", "PolicyDocument"=>{"Version"=>"2012-10-17", "Statement"=>[{"Sid"=>"logs", "Action"=>["logs:*"], "Resource"=>["*"], "Effect"=>"Allow"}]}}])
       end
       
     end
@@ -102,6 +102,10 @@ describe 'compiled component redshift' do
       
       it "to have property Description" do
           expect(resource["Properties"]["Description"]).to eq({"Fn::Sub"=>"${EnvironmentName} Secrets Manager to store Redshift user credentials"})
+      end
+      
+      it "to have property Name" do
+          expect(resource["Properties"]["Name"]).to eq("SecretRedshiftMasterUser")
       end
       
       it "to have property GenerateSecretString" do
@@ -208,6 +212,10 @@ describe 'compiled component redshift' do
           expect(resource["Properties"]["DBName"]).to eq({"Fn::If"=>["DatabaseNameSet", {"Ref"=>"DatabaseName"}, {"Ref"=>"AWS::NoValue"}]})
       end
       
+      it "to have property PubliclyAccessible" do
+          expect(resource["Properties"]["PubliclyAccessible"]).to eq(false)
+      end
+      
       it "to have property MasterUsername" do
           expect(resource["Properties"]["MasterUsername"]).to eq({"Fn::Sub"=>"{{resolve:secretsmanager:${SecretRedshiftMasterUser}:SecretString:username}}"})
       end
@@ -247,10 +255,10 @@ describe 'compiled component redshift' do
       it "to have property SnapshotIdentifier" do
           expect(resource["Properties"]["SnapshotIdentifier"]).to eq({"Fn::If"=>["SnapshotSet", {"Ref"=>"Snapshot"}, {"Ref"=>"AWS::NoValue"}]})
       end
-
+      
       it "to have property OwnerAccount" do
-        expect(resource["Properties"]["OwnerAccount"]).to eq({"Fn::If"=>["SnapshotAccountOwnerSet", {"Ref"=>"SnapshotAccountOwner"}, {"Ref"=>"AWS::NoValue"}]})
-    end
+          expect(resource["Properties"]["OwnerAccount"]).to eq({"Fn::If"=>["SnapshotAccountOwnerSet", {"Ref"=>"SnapshotAccountOwner"}, {"Ref"=>"AWS::NoValue"}]})
+      end
       
       it "to have property Tags" do
           expect(resource["Properties"]["Tags"]).to eq([{"Key"=>"Environment", "Value"=>{"Ref"=>"EnvironmentName"}}])
